@@ -16,7 +16,8 @@ export class EditorComponent implements OnInit {
     private puebaService: PruebaService
   ) {
   };
-  text: string = "";
+  
+  text: any = "valooor njdhfjhdgj";
   options: any = { maxLines: 20, minLines: 20, printMargin: false };
   ngOnInit(): void {
   }
@@ -50,6 +51,7 @@ export class EditorComponent implements OnInit {
       'Resultados se encuentran en la consola',
       'success'
     )
+    console.log(this.text)
   }
 
   public check() {
