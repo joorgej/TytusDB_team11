@@ -5,5 +5,5 @@
 </div>
 <div ace-editor id="editor" style="height: 50%; min-width: 100px; max-width: 20000px;" [(text)]="text" theme="sqlserver" mode="sql" [options]="options"></div>
 <div class="overflow-hidden">
-    <app-console></app-console>
+    <app-console [state]="messages" [encabezados]="res" [resultados]="resultados" [querys]="querys" [errores]="errores"></app-console>
 </div>

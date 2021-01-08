@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Output } from '@angular/core';
 import { PruebaService } from 'src/app/service/prueba.service'
 import Swal from 'sweetalert2';
 import 'brace';
@@ -6,6 +6,8 @@ import 'brace/mode/sql';
 import 'brace/theme/sqlserver';
 import * as ace from 'ace-builds';
 import { AceEditorModule } from 'ng2-ace-editor';
+import { ConsoleComponent } from '../console/console.component';
+import { EventEmitter } from 'events';
 
 @Component({
   selector: 'app-editor',
@@ -15,18 +17,20 @@ import { AceEditorModule } from 'ng2-ace-editor';
 })
 export class EditorComponent implements OnInit {
   @ViewChild('editor') editor: any;
-  constructor(
-    private puebaService: PruebaService
-  ) {
-  };
+  constructor(private puebaService: PruebaService) { };
 
   ngAfterViewInit() {
   }
-  
+
   text: any = "";
   options: any = { maxLines: 20, minLines: 20, printMargin: false };
-  ngOnInit(): void {
-  }
+  public messages: string = ""
+  public res: any[] = []
+  public resultados: any[] = []
+  public querys: any[] = []
+  public errores: string = ""
+
+  ngOnInit(): void { }
 
   public save() {
     Swal.fire({
@@ -46,18 +50,31 @@ export class EditorComponent implements OnInit {
 
   public run() {
     this.puebaService.ejecucion(this.text).subscribe(
-      res=>{
-        console.log(res);
+      res => {
+        //@ts-ignore
+        for (const iterator of res.response.messages) {
+          this.messages += iterator + "\n\n"
+        }
+        //@ts-ignore
+        console.log(res.response);
+        //@ts-ignore
+        this.querys = res.response.querys
+        this.errores = ""
+        //@ts-ignore
+        for (const iterator of res.response.postgres) {
+          this.errores += iterator + "\n\n"
+        }
+        console.log(this.errores)
       },
       err => console.error(err)
     );
-    
-    Swal.fire(
-      'Ejucucion exitosa',
-      'Resultados se encuentran en la consola',
-      'success'
-    )
-    console.log(this.text)
+
+    /* Swal.fire(
+       'Ejucucion exitosa',
+       'Resultados se encuentran en la consola',
+       'success'
+     )*/
+    //console.log(this.text)
   }
 
   public check() {
