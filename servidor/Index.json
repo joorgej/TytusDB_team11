@@ -1,0 +1,1 @@
+{"idx_califica": {"Table": "tbcalificacion", "Unique": true, "Method": "BTREE", "Columns": [{"Name": "idcalifica", "Order": "ASC", "Nulls": "NULLS LAST"}]}}

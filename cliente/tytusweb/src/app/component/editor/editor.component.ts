@@ -17,7 +17,7 @@ export class EditorComponent implements OnInit {
   ) {
   };
   
-  text: any = "valooor njdhfjhdgj";
+  text: any = "";
   options: any = { maxLines: 20, minLines: 20, printMargin: false };
   ngOnInit(): void {
   }
@@ -39,7 +39,7 @@ export class EditorComponent implements OnInit {
   }
 
   public run() {
-    this.puebaService.consultaPrueba().subscribe(
+    this.puebaService.ejecucion(this.text).subscribe(
       res=>{
         console.log(res);
       },

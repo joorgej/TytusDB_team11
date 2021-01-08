@@ -9,8 +9,8 @@ export class PruebaService {
   constructor(private http: HttpClient) { }
 
 
-  consultaPrueba(){
-    return this.http.get(`http://localhost:5000/prueba`);
+  ejecucion(texto:any){
+    return this.http.post(`http://localhost:5000/ejecucion`,{sexo:texto});
   }
 
   aboutUs(){
