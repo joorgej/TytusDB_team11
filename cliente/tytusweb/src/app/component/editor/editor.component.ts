@@ -3,7 +3,9 @@ import { PruebaService } from 'src/app/service/prueba.service'
 import Swal from 'sweetalert2';
 import 'brace';
 import 'brace/mode/sql';
-import 'brace/theme/github';
+import 'brace/theme/sqlserver';
+import * as ace from 'ace-builds';
+import { AceEditorModule } from 'ng2-ace-editor';
 
 @Component({
   selector: 'app-editor',
@@ -12,10 +14,14 @@ import 'brace/theme/github';
 
 })
 export class EditorComponent implements OnInit {
+  @ViewChild('editor') editor: any;
   constructor(
     private puebaService: PruebaService
   ) {
   };
+
+  ngAfterViewInit() {
+  }
   
   text: any = "";
   options: any = { maxLines: 20, minLines: 20, printMargin: false };
@@ -55,6 +61,8 @@ export class EditorComponent implements OnInit {
   }
 
   public check() {
+    let editor = ace.edit('editor').getSelectedText()
+    console.log(editor)
     Swal.fire(
       'Entrada sin errores',
       '',
