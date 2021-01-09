@@ -29,24 +29,10 @@ export class EditorComponent implements OnInit {
   public resultados: any[] = []
   public querys: any[] = []
   public errores: string = ""
-
+  copytext:string = ""
   ngOnInit(): void { }
 
-  public save() {
-    Swal.fire({
-      title: 'Quieres guardar los cambios?',
-      showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: `Si`,
-      denyButtonText: `No`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire('Guardado!', '', 'success')
-      } else if (result.isDenied) {
-        Swal.fire('Los cambios no fueron guardados', '', 'error')
-      }
-    })
-  }
+
 
   public run() {
     this.puebaService.ejecucion(this.text).subscribe(
@@ -64,7 +50,18 @@ export class EditorComponent implements OnInit {
         for (const iterator of res.response.postgres) {
           this.errores += iterator + "\n\n"
         }
-        console.log(this.errores)
+
+        //@ts-ignore
+        for (const iterator of res.response.lexical) {
+          this.errores += iterator + "\n\n"
+        }
+
+        //@ts-ignore
+        for (const iterator of res.response.semantic) {
+          this.errores += iterator + "\n\n"
+        }
+
+        //console.log(this.errores)
       },
       err => console.error(err)
     );
@@ -94,9 +91,71 @@ export class EditorComponent implements OnInit {
         for (const iterator of res.response.postgres) {
           this.errores += iterator + "\n\n"
         }
-        console.log(this.errores)
+
+        //@ts-ignore
+        for (const iterator of res.response.lexical) {
+          this.errores += iterator + "\n\n"
+        }
+
+        //@ts-ignore
+        for (const iterator of res.response.semantic) {
+          this.errores += iterator + "\n\n"
+        }
       },
       err => console.error(err)
     );
+  }
+
+  public save() {
+    Swal.fire({
+      title: 'Ingrese el nombre:',
+      input: 'text',
+      inputAttributes: {
+        autocapitalize: 'off'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      showLoaderOnConfirm: true,
+      cancelButtonText: 'Cancelar   ',
+      preConfirm: (login) => {
+        this.descargar(login, this.text)
+        Swal.fire(
+          'Query guardado exitosamente ' + login,
+          '',
+          'info'
+        )
+      },
+    }).then((result) => {
+
+    })
+  }
+
+  descargar(name: string, value:string) {
+    var filename = name + ".sql";
+    var blob = new Blob([value], { type: 'text/plain' }); // EN ESTA LINEA AGREGAS TU TEXTO 
+    var link = document.createElement("a");
+    link.download = filename;
+    link.href = window.URL.createObjectURL(blob);
+    link.click();
+  }
+
+  async  paste() {
+    const text = await navigator.clipboard.readText();
+    this.text += text;
+  }
+
+  public copy(){
+    let editor = ace.edit('editor').getSelectedText()
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = editor;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 }
